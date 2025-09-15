@@ -46,3 +46,4 @@ Sample `200` Response:
 ## 🔒 Environment Variables
 
 No environment variables required.
+
