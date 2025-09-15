@@ -26,6 +26,8 @@ Future<dynamic> main(final dynamic context) async {
 
     final databaseId = Platform.environment['APPWRITE_DB_ID']!;
     final usersTableId = 'users';
+    final companiesTableId = 'companies';
+    final shiftsTableId = 'shifts';
 
     switch (action) {
       case 'list':
@@ -43,6 +45,31 @@ Future<dynamic> main(final dynamic context) async {
         final List<Map<String, dynamic>> combinedList = [];
         for (var row in userRows.rows) {
           final rowData = row.data;
+
+          dynamic companyObj;
+          if (rowData['companyId'] is String) {
+            final compRow = await tables.getRow(
+              databaseId: databaseId,
+              tableId: companiesTableId,
+              rowId: rowData['companyId'],
+            );
+            companyObj = compRow.data;
+          } else if (rowData['companyId'] is Map) {
+            companyObj = rowData['companyId'];
+          }
+
+          dynamic shiftObj;
+          if (rowData['shiftId'] is String) {
+            final shiftRow = await tables.getRow(
+              databaseId: databaseId,
+              tableId: shiftsTableId,
+              rowId: rowData['shiftId'],
+            );
+            shiftObj = shiftRow.data;
+          } else if (rowData['shiftId'] is Map) {
+            shiftObj = rowData['shiftId'];
+          }
+
           final authUser = authUsersMap[rowData['userId']];
 
           if (authUser != null) {
@@ -54,8 +81,8 @@ Future<dynamic> main(final dynamic context) async {
               'role': rowData['role'],
               'department': rowData['department'],
               'phone': rowData['phone'],
-              'company': rowData['companyId'],
-              'shift': rowData['shiftId'],
+              'company': companyObj,
+              'shift': shiftObj,
             });
           }
         }
@@ -72,6 +99,30 @@ Future<dynamic> main(final dynamic context) async {
         );
         final rowData = row.data;
 
+        dynamic companyObj;
+        if (rowData['companyId'] is String) {
+          final compRow = await tables.getRow(
+            databaseId: databaseId,
+            tableId: companiesTableId,
+            rowId: rowData['companyId'],
+          );
+          companyObj = compRow.data;
+        } else if (rowData['companyId'] is Map) {
+          companyObj = rowData['companyId'];
+        }
+
+        dynamic shiftObj;
+        if (rowData['shiftId'] is String) {
+          final shiftRow = await tables.getRow(
+            databaseId: databaseId,
+            tableId: shiftsTableId,
+            rowId: rowData['shiftId'],
+          );
+          shiftObj = shiftRow.data;
+        } else if (rowData['shiftId'] is Map) {
+          shiftObj = rowData['shiftId'];
+        }
+
         final authUser = await users.get(userId: rowData['userId']);
 
         final Map<String, dynamic> combinedData = {
@@ -82,8 +133,8 @@ Future<dynamic> main(final dynamic context) async {
           'role': rowData['role'],
           'department': rowData['department'],
           'phone': rowData['phone'],
-          'company': rowData['companyId'],
-          'shift': rowData['shiftId'],
+          'company': companyObj,
+          'shift': shiftObj,
         };
         return context.res.json({'success': true, 'data': combinedData});
 
