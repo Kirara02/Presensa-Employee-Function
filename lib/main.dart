@@ -54,8 +54,8 @@ Future<dynamic> main(final dynamic context) async {
               'role': rowData['role'],
               'department': rowData['department'],
               'phone': rowData['phone'],
-              'company': rowData['companyId'] as Map<String, dynamic>?,
-              'shift': rowData['shiftId'] as Map<String, dynamic>?,
+              'company': rowData['companyId'],
+              'shift': rowData['shiftId'],
             });
           }
         }
@@ -82,8 +82,8 @@ Future<dynamic> main(final dynamic context) async {
           'role': rowData['role'],
           'department': rowData['department'],
           'phone': rowData['phone'],
-          'company': rowData['companyId'] as Map<String, dynamic>?,
-          'shift': rowData['shiftId'] as Map<String, dynamic>?,
+          'company': rowData['companyId'],
+          'shift': rowData['shiftId'],
         };
         return context.res.json({'success': true, 'data': combinedData});
 
